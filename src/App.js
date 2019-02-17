@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
+import { login } from './auth'
 
 class App extends Component {
   render() {
@@ -11,8 +12,12 @@ class App extends Component {
           </p>
         </header>
       </div>
-    );
+    )
+  }
+
+  componentDidMount() {
+    login()
   }
 }
 
-export default App;
+export default App
