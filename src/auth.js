@@ -1,6 +1,11 @@
 import auth0 from 'auth0-js'
 import { history } from './history'
 
+let accessToken = null
+let idToken = null
+let expiresAt = 0
+const home = '/home'
+
 const makeRetrieveClient = () => {
     let client
 
@@ -40,7 +45,7 @@ export const handleAuthentication = () => {
         if (authResult && authResult.accessToken && authResult.idToken) {
             setSession(authResult);
           } else if (err) {
-            history.replace('/home');
+            history.replace(home);
             console.error(err);
             alert(`Error: ${err.error}. Check the console for further details.`);
           }
@@ -65,6 +70,16 @@ export const login = () => {
     const client = retreiveClient()
     client.authorize()
 }
+
+export const logout = () => {
+    accessToken = null;
+    idToken = null;
+    expiresAt = 0;
+
+    localStorage.removeItem('isLoggedIn');
+
+    history.replace(home);
+  }
 
 export const getAccessToke = () => accessToken
 
