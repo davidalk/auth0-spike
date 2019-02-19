@@ -21,14 +21,17 @@ const makeRetrieveClient = () => {
 
 const retreiveClient = makeRetrieveClient()
 
-export const login = () => {
-    const client = retreiveClient()
-    client.authorize()
+const setSession = (authResult) => {
+    localStorage.setItem('isLoggedIn', 'true');
+
+    const expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    accessToken = authResult.accessToken;
+    idToken = authResult.idToken;
+    expiresAt = expiresAt;
+
+    // navigate to the home route
+    history.replace('/home');
 }
-
-export const getAccessToke = () => accessToken
-
-export const getIdToken = () => idToken
 
 export const handleAuthentication = () => {
     const client = retreiveClient()
@@ -38,8 +41,31 @@ export const handleAuthentication = () => {
             setSession(authResult);
           } else if (err) {
             history.replace('/home');
-            console.log(err);
+            console.error(err);
             alert(`Error: ${err.error}. Check the console for further details.`);
           }
     })
 }
+
+export const renewSession = () => {
+    const client = retreiveClient() 
+    
+    client.checkSession({}, (err, authResult) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+            setSession(authResult)
+        } else if (err) {
+            logout();
+            console.error(err);
+            alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+        }
+    })
+}
+
+export const login = () => {
+    const client = retreiveClient()
+    client.authorize()
+}
+
+export const getAccessToke = () => accessToken
+
+export const getIdToken = () => idToken
