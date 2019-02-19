@@ -1,4 +1,5 @@
 import auth0 from 'auth0-js'
+import { history } from './history'
 
 const makeRetrieveClient = () => {
     let client
@@ -20,9 +21,25 @@ const makeRetrieveClient = () => {
 
 const retreiveClient = makeRetrieveClient()
 
-const login = () => {
+export const login = () => {
     const client = retreiveClient()
     client.authorize()
 }
 
-export { login }
+export const getAccessToke = () => accessToken
+
+export const getIdToken = () => idToken
+
+export const handleAuthentication = () => {
+    const client = retreiveClient()
+    
+    client.parseHash((err, authResult) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+            setSession(authResult);
+          } else if (err) {
+            history.replace('/home');
+            console.log(err);
+            alert(`Error: ${err.error}. Check the console for further details.`);
+          }
+    })
+}
