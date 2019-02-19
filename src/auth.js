@@ -40,21 +40,21 @@ const setSession = (authResult) => {
 
 export const handleAuthentication = () => {
     const client = retreiveClient()
-    
+
     client.parseHash((err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
             setSession(authResult);
-          } else if (err) {
+        } else if (err) {
             history.replace(home);
             console.error(err);
             alert(`Error: ${err.error}. Check the console for further details.`);
-          }
+        }
     })
 }
 
 export const renewSession = () => {
-    const client = retreiveClient() 
-    
+    const client = retreiveClient()
+
     client.checkSession({}, (err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
             setSession(authResult)
@@ -79,11 +79,11 @@ export const logout = () => {
     localStorage.removeItem('isLoggedIn');
 
     history.replace(home);
-  }
+}
 
 export const isAuthenticated = () => {
     return new Date().getTime() < expiresAt;
-  }
+}
 
 export const getAccessToke = () => accessToken
 
