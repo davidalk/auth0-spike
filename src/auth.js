@@ -81,6 +81,10 @@ export const logout = () => {
     history.replace(home);
   }
 
+export const isAuthenticated = () => {
+    return new Date().getTime() < expiresAt;
+  }
+
 export const getAccessToke = () => accessToken
 
 export const getIdToken = () => idToken
