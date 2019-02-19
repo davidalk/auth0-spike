@@ -32,7 +32,6 @@ const setSession = (authResult) => {
     expiresAt = (authResult.expiresIn * 1000) + new Date().getTime()
     accessToken = authResult.accessToken
     idToken = authResult.idToken
-    expiresAt = expiresAt
 
     // navigate to the home route
     history.replace('/home')
