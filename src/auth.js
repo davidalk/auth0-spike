@@ -27,15 +27,15 @@ const makeRetrieveClient = () => {
 const retreiveClient = makeRetrieveClient()
 
 const setSession = (authResult) => {
-    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('isLoggedIn', 'true')
 
-    const expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
-    accessToken = authResult.accessToken;
-    idToken = authResult.idToken;
-    expiresAt = expiresAt;
+    expiresAt = (authResult.expiresIn * 1000) + new Date().getTime()
+    accessToken = authResult.accessToken
+    idToken = authResult.idToken
+    expiresAt = expiresAt
 
     // navigate to the home route
-    history.replace('/home');
+    history.replace('/home')
 }
 
 export const handleAuthentication = () => {
@@ -43,11 +43,11 @@ export const handleAuthentication = () => {
 
     client.parseHash((err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
-            setSession(authResult);
+            setSession(authResult)
         } else if (err) {
-            history.replace(home);
-            console.error(err);
-            alert(`Error: ${err.error}. Check the console for further details.`);
+            history.replace(home)
+            console.error(err)
+            alert(`Error: ${err.error}. Check the console for further details.`)
         }
     })
 }
@@ -59,9 +59,9 @@ export const renewSession = () => {
         if (authResult && authResult.accessToken && authResult.idToken) {
             setSession(authResult)
         } else if (err) {
-            logout();
-            console.error(err);
-            alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+            logout()
+            console.error(err)
+            alert(`Could not get a new token (${err.error}: ${err.error_description}).`)
         }
     })
 }
@@ -72,17 +72,17 @@ export const login = () => {
 }
 
 export const logout = () => {
-    accessToken = null;
-    idToken = null;
-    expiresAt = 0;
+    accessToken = null
+    idToken = null
+    expiresAt = 0
 
-    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isLoggedIn')
 
-    history.replace(home);
+    history.replace(home)
 }
 
 export const isAuthenticated = () => {
-    return new Date().getTime() < expiresAt;
+    return new Date().getTime() < expiresAt
 }
 
 export const getAccessToke = () => accessToken
