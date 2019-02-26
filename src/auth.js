@@ -75,7 +75,7 @@ export const renewSession = () => {
 
 export const login = () => {
     const client = retreiveClient()
-    client.authorize()
+    client.authorize({prompt: 'login'})
 }
 
 export const logout = () => {
