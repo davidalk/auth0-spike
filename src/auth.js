@@ -4,7 +4,7 @@ import { history } from './history'
 let accessToken = null
 let idToken = null
 let expiresAt = 0
-const home = '/home'
+const home = '/'
 
 const makeRetrieveClient = () => {
     let client
@@ -14,7 +14,7 @@ const makeRetrieveClient = () => {
             client = new auth0.WebAuth({
                 domain: 'alkanani.eu.auth0.com',
                 clientID: '5VaE3Bt7Q9gRZ6fFx6J1A4e0Su4NCdp3',
-                redirectUri: 'http://localhost:3000/callback',
+                redirectUri: 'http://localhost:3000/',
                 responseType: 'token id_token',
                 scope: 'openid'
             })
@@ -34,34 +34,42 @@ const setSession = (authResult) => {
     idToken = authResult.idToken
 
     // navigate to the home route
-    history.replace('/home')
+    history.replace(home)
 }
 
 export const handleAuthentication = () => {
     const client = retreiveClient()
 
-    client.parseHash((err, authResult) => {
-        if (authResult && authResult.accessToken && authResult.idToken) {
-            setSession(authResult)
-        } else if (err) {
-            history.replace(home)
-            console.error(err)
-            alert(`Error: ${err.error}. Check the console for further details.`)
-        }
+    return new Promise((resolve, reject) => {
+        client.parseHash((err, authResult) => {
+            if (authResult && authResult.accessToken && authResult.idToken) {
+                setSession(authResult)
+                resolve()
+            } else if (err) {
+                history.replace(home)
+                console.error(err)
+                reject(err)
+            }
+        })
     })
+
 }
 
 export const renewSession = () => {
     const client = retreiveClient()
 
-    client.checkSession({}, (err, authResult) => {
-        if (authResult && authResult.accessToken && authResult.idToken) {
-            setSession(authResult)
-        } else if (err) {
-            logout()
-            console.error(err)
-            alert(`Could not get a new token (${err.error}: ${err.error_description}).`)
-        }
+    return new Promise((resolve, reject) => {
+        client.checkSession({}, (err, authResult) => {
+            if (authResult && authResult.accessToken && authResult.idToken) {
+                setSession(authResult)
+                resolve()
+            } else if (err) {
+                logout()
+                console.error(`Could not get a new token (${err.error}: ${err.error_description}).`)
+                console.error(err)
+                reject(err)
+            }
+        })
     })
 }
 
