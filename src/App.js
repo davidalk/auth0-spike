@@ -9,11 +9,7 @@ import {
 } from './auth'
 import { Content } from './Content'
 import { LoggedOut } from './LoggedOut'
-
-const isCallback = () => {
-  const hash = window.location.hash
-  return (/access_token|id_token|error/.test(hash))
-}
+import { isCallback } from './isCallback'
 
 const App = () => {
 
