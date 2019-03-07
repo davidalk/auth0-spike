@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 import {
   login,
@@ -14,7 +14,7 @@ const isCallback = () => {
   return (/access_token|id_token|error/.test(hash))
 }
 
-const Content = ({handleLogout}) => (
+const Content = ({ handleLogout }) => (
   <div>
     <p>You are in the App!!!</p>
     <button onClick={() => handleLogout()}>Logout</button>
@@ -23,52 +23,42 @@ const Content = ({handleLogout}) => (
 
 const LoggedOut = () => (<div>You are not logged in!!!!</div>)
 
-class App extends Component {
-  constructor(props) {
-    super(props)
+const App = () => {
 
-    this.handleLogout = this.handleLogout.bind(this)
+  const [authenticated, setAuthenticated] = useState(false)
 
-    this.state = {
-      authenticated: false
-    }
-  }
-
-  handleLogout() {
+  const handleLogout = () => {
     logout()
-    this.setState({authenticated: false})
+    setAuthenticated(false)
   }
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          {this.state.authenticated ? 
-          <Content handleLogout={this.handleLogout}/> : <LoggedOut/>}
-        </header>
-      </div>
-    )
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
       renewSession().then(() => {
-        this.setState({authenticated: isAuthenticated()})
+         setAuthenticated(isAuthenticated())
       })
       console.log('logged in')
     } else {
       console.log('not logged in')
-      if (isCallback()) { 
+      if (isCallback()) {
         handleAuthentication().then(() => {
-          this.setState({authenticated: isAuthenticated()})
+          setAuthenticated(isAuthenticated())
         })
       } else {
         login()
       }
     }
-    this.setState({authenticated: isAuthenticated()})
-  }
+    setAuthenticated(isAuthenticated())
+  }, [])
 
+  return (
+    <div className="App">
+      <header className="App-header">
+        {authenticated ?
+          <Content handleLogout={handleLogout} /> : <LoggedOut />}
+      </header>
+    </div>
+  )
 }
 
 export default App
