@@ -7,21 +7,13 @@ import {
   handleAuthentication,
   renewSession
 } from './auth'
-
+import { Content } from './Content'
+import { LoggedOut } from './LoggedOut'
 
 const isCallback = () => {
   const hash = window.location.hash
   return (/access_token|id_token|error/.test(hash))
 }
-
-const Content = ({ handleLogout }) => (
-  <div>
-    <p>You are in the App!!!</p>
-    <button onClick={() => handleLogout()}>Logout</button>
-  </div>
-)
-
-const LoggedOut = () => (<div>You are not logged in!!!!</div>)
 
 const App = () => {
 
